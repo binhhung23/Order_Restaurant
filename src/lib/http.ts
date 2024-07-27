@@ -62,7 +62,6 @@ const request = async <Response>(
   url: string,
   options?: CustomOptions | undefined
 ) => {
-  console.log(options);
   let body: FormData | string | undefined = undefined;
   if (options?.body instanceof FormData) {
     body = options.body;
