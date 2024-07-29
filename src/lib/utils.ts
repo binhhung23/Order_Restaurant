@@ -40,3 +40,15 @@ export const handleErrorApi = ({
 export const normalizePath = (path: string) => {
   return path.startsWith("/") ? path.slice(1) : path;
 };
+
+/**
+ * Lấy token từ localStorage
+ */
+
+const browser = typeof window !== "undefined";
+
+export const getAccessTokenLocalStorage = () =>
+  browser ? localStorage.getItem("accessToken") : null;
+
+export const getRefreshTokenLocalStorage = () =>
+  browser ? localStorage.getItem("refreshToken") : null;
