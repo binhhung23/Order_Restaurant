@@ -3,7 +3,12 @@ import { useMutation } from "@tanstack/react-query";
 
 export const useLoginMutation = () => {
   return useMutation({
-    mutationKey: ["login"],
     mutationFn: authApiRequests.cLogin,
+  });
+};
+
+export const useLogoutMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequests.cLogout,
   });
 };
