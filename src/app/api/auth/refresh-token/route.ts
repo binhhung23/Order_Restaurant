@@ -6,7 +6,6 @@ import { HttpError } from "@/lib/http";
 export async function POST(request: Request) {
   const cookieStore = cookies();
   const refreshToken = cookieStore.get("refreshToken")?.value;
-  console.log(refreshToken);
   if (!refreshToken) {
     return Response.json(
       { message: "không tìm thấy refreshToken" },

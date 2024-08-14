@@ -45,10 +45,16 @@ export const normalizePath = (path: string) => {
  * Lấy token từ localStorage
  */
 
-const browser = typeof window !== "undefined";
+const isBrowser = typeof window !== "undefined";
 
 export const getAccessTokenLocalStorage = () =>
-  browser ? localStorage.getItem("accessToken") : null;
+  isBrowser ? localStorage.getItem("accessToken") : null;
 
 export const getRefreshTokenLocalStorage = () =>
-  browser ? localStorage.getItem("refreshToken") : null;
+  isBrowser ? localStorage.getItem("refreshToken") : null;
+
+export const setAccessTokenToLocalStorage = (value: string) =>
+  isBrowser && localStorage.setItem("accessToken", value);
+
+export const setRefreshTokenToLocalStorage = (value: string) =>
+  isBrowser && localStorage.setItem("refreshToken", value);
