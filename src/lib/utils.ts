@@ -3,7 +3,8 @@ import { EntityError } from "@/lib/http";
 import { type ClassValue, clsx } from "clsx";
 import { UseFormSetError } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
-
+import jwt from "jsonwebtoken";
+import authApiRequests from "@/apiRequests/auth";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -58,3 +59,40 @@ export const setAccessTokenToLocalStorage = (value: string) =>
 
 export const setRefreshTokenToLocalStorage = (value: string) =>
   isBrowser && localStorage.setItem("refreshToken", value);
+
+export const checkAndRefreshToken = async (param?: {
+  onError?: () => void;
+  onSuccess?: () => void;
+}) => {
+  const refreshToken = getRefreshTokenLocalStorage();
+  const accessToken = getAccessTokenLocalStorage();
+  if (!refreshToken || !accessToken) return;
+  const decodedAccessToken = jwt.decode(accessToken) as {
+    exp: number;
+    iat: number;
+  };
+  const decodedRefreshToken = jwt.decode(refreshToken) as {
+    exp: number;
+    iat: number;
+  };
+  // thời điểm hết hạn của token tính theo epoch time (s)
+  // còn khi dùng cú pháp new Date().getTime() thì nó sẽ trả về epoch time (ms)
+  const now = Math.round(new Date().getTime() / 1000);
+  if (decodedRefreshToken.exp <= now) return;
+
+  // kiểm tra còn 1/3 thời gian (3s) thì mình sẽ cho refresh token lại
+  if (
+    decodedAccessToken.exp - now <
+    (decodedAccessToken.exp - decodedAccessToken.iat) / 3
+  ) {
+    // Gọi API refresh token
+    try {
+      const res = await authApiRequests.cRefreshToken();
+      setAccessTokenToLocalStorage(res.payload.data.accessToken);
+      setRefreshTokenToLocalStorage(res.payload.data.refreshToken);
+      param?.onSuccess && param.onSuccess();
+    } catch (error) {
+      param?.onError && param.onError();
+    }
+  }
+};
