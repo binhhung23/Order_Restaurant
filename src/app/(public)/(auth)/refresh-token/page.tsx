@@ -20,6 +20,8 @@ export default function RefreshTokenPage() {
           router.push(redirectUrl || "/");
         },
       });
+    } else {
+      router.push("/");
     }
   }, [router, refreshTokenFromUrl, redirectUrl]);
   return <div>refreshToken</div>;
