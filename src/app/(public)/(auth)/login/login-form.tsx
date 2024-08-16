@@ -46,6 +46,7 @@ export default function LoginForm() {
       toast({
         description: result.payload.message,
       });
+      setIsAuth(true);
     } catch (error: any) {
       handleErrorApi({
         error,
