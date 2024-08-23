@@ -19,7 +19,7 @@ import { toast } from "@/components/ui/use-toast";
 import { handleErrorApi } from "@/lib/utils";
 
 export default function UpdateProfileForm() {
-  const [file, setfile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const { data } = useAccountMe();
   const updateMeMutation = useUpdateMeMutation();
@@ -51,7 +51,7 @@ export default function UpdateProfileForm() {
   }, [avatar, file]);
   const reset = () => {
     form.reset();
-    setfile(null);
+    setFile(null);
   };
   const onSubmit = async (values: UpdateMeBodyType) => {
     if (updateMeMutation.isPending) return;
@@ -112,7 +112,7 @@ export default function UpdateProfileForm() {
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            setfile(file);
+                            setFile(file);
                             // field.onChange(
                             //   "http://localhost:3000/" + file.name
                             // );
