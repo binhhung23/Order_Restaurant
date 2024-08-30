@@ -2,14 +2,14 @@ import tableApiRequests from "@/apiRequests/table";
 import { UpdateTableBodyType } from "@/schemaValidations/table.schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useGetDishList = () => {
+export const useTableListQuery = () => {
   return useQuery({
     queryKey: ["tables"],
     queryFn: tableApiRequests.getListTable,
   });
 };
 
-export const useGetDish = ({
+export const useTableQuery = ({
   number,
   enabled,
 }: {
