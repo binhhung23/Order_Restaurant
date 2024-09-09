@@ -24,12 +24,12 @@ export default function LoginForm() {
   const loginMutation = useLoginMutation();
   const searchParams = useSearchParams();
   const clearToken = searchParams.get("clearToken");
-  const { setIsAuth } = useAppContext();
+  const { setRole } = useAppContext();
   useEffect(() => {
     if (clearToken) {
-      setIsAuth(false);
+      setRole(undefined);
     }
-  }, [clearToken, setIsAuth]);
+  }, [clearToken, setRole]);
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -42,10 +42,11 @@ export default function LoginForm() {
     if (loginMutation.isPending) return;
     try {
       const result = await loginMutation.mutateAsync(data);
-      router.push("/manage/dashboard");
       toast({
         description: result.payload.message,
       });
+      setRole(result.payload.data.account.role);
+      router.push("/manage/dashboard");
     } catch (error: any) {
       handleErrorApi({
         error,

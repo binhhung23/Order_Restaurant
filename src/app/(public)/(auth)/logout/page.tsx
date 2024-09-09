@@ -11,7 +11,7 @@ import { Suspense, useEffect, useRef } from "react";
 
 function Logout() {
   const { mutateAsync } = useLogoutMutation();
-  const { setIsAuth } = useAppContext();
+  const { setRole } = useAppContext();
   const router = useRouter();
   const searchParams = useSearchParams();
   const refreshTokenFromUrl = searchParams.get("refreshToken");
@@ -30,13 +30,13 @@ function Logout() {
         setTimeout(() => {
           ref.current = null;
         }, 1000);
-        setIsAuth(false);
+        setRole(undefined);
         router.push("/login");
       });
     } else {
       router.push("/");
     }
-  }, [mutateAsync, router, refreshTokenFromUrl, accessTokenFromUrl, setIsAuth]);
+  }, [mutateAsync, router, refreshTokenFromUrl, accessTokenFromUrl, setRole]);
   return <div>Logout page</div>;
 }
 
