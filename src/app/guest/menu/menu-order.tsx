@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { cn, formatCurrency, handleErrorApi } from "@/lib/utils";
-import { useGetDishList } from "@/queries/useDish";
+import { useDishListQuery } from "@/queries/useDish";
 import Quantity from "@/app/guest/menu/quantity";
 import { GuestCreateOrdersBodyType } from "@/schemaValidations/guest.schema";
 import { useMemo, useState } from "react";
@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { DishStatus } from "@/constants/type";
 
 export default function MenuOrder() {
-  const { data } = useGetDishList();
+  const { data } = useDishListQuery();
   const dishes = useMemo(() => data?.payload.data ?? [], [data]);
   const [orders, setOrders] = useState<GuestCreateOrdersBodyType>([]);
   const { mutateAsync } = useGuestOrderMutation();
