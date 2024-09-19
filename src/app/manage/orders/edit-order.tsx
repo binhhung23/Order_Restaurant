@@ -193,7 +193,6 @@ export default function EditOrder({
                       <FormLabel>Trạng thái</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
                         value={field.value}
                       >
                         <FormControl className="col-span-3">
