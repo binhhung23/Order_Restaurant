@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
+import { OrderStatus } from "@/constants/type";
 import socket from "@/lib/socket";
 import { formatCurrency, getVietnameseOrderStatus } from "@/lib/utils";
 import { useGuestGetOrderListQuery } from "@/queries/useGuest";
@@ -12,10 +13,46 @@ import { useEffect, useMemo } from "react";
 export default function OrderCart() {
   const { data, refetch } = useGuestGetOrderListQuery();
   const orders = useMemo(() => data?.payload.data ?? [], [data]);
-  const totalPrice = useMemo(() => {
-    return orders.reduce((result, order) => {
-      return result + order.dishSnapshot.price * order.quantity;
-    }, 0);
+  const { unpaid, paid } = useMemo(() => {
+    return orders.reduce(
+      (result, order) => {
+        if (
+          order.status === OrderStatus.Delivered ||
+          order.status === OrderStatus.Pending ||
+          order.status === OrderStatus.Processing
+        ) {
+          return {
+            ...result,
+            unpaid: {
+              price:
+                result.unpaid.price + order.dishSnapshot.price * order.quantity,
+              quantity: result.unpaid.quantity + order.quantity,
+            },
+          };
+        }
+        if (order.status === OrderStatus.Paid) {
+          return {
+            ...result,
+            paid: {
+              price:
+                result.paid.price + order.dishSnapshot.price * order.quantity,
+              quantity: result.paid.quantity + order.quantity,
+            },
+          };
+        }
+        return result;
+      },
+      {
+        unpaid: {
+          price: 0,
+          quantity: 0,
+        },
+        paid: {
+          price: 0,
+          quantity: 0,
+        },
+      }
+    );
   }, [orders]);
 
   useEffect(() => {
@@ -84,10 +121,18 @@ export default function OrderCart() {
       ))}
       <div className="sticky bottom-0">
         <div className="w-full justify-between text-xl font-semibold space-x-4">
-          <span>Tổng Cộng · {orders.length} món</span>
-          <span>{formatCurrency(totalPrice)}</span>
+          <span>Đơn chưa thanh toán · {unpaid.quantity} món</span>
+          <span>{formatCurrency(unpaid.price)}</span>
         </div>
       </div>
+      {paid.quantity !== 0 && (
+        <div className="sticky bottom-0">
+          <div className="w-full justify-between text-xl font-semibold space-x-4">
+            <span>Đơn đã thanh toán · {paid.quantity} món</span>
+            <span>{formatCurrency(paid.price)}</span>
+          </div>
+        </div>
+      )}
     </>
   );
 }
