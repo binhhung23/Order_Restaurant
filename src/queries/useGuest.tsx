@@ -19,21 +19,15 @@ export const useGuestRefreshTokenMutation = () => {
   });
 };
 
-export const useGetGuestOrderListQuery = () => {
-  return useQuery({
-    queryKey: ["guest-orders"],
-    queryFn: guestApiRequests.getOrderList,
+export const useGuestOrderMutation = () => {
+  return useMutation({
+    mutationFn: guestApiRequests.order,
   });
 };
 
-export const useGuestOrderMutation = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: guestApiRequests.order,
-    onSuccess: () => {
-      queryClient.refetchQueries({
-        queryKey: ["guest-orders"],
-      });
-    },
+export const useGuestGetOrderListQuery = () => {
+  return useQuery({
+    queryFn: guestApiRequests.getOrderList,
+    queryKey: ["guest-orders"],
   });
 };

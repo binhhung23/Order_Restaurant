@@ -4,13 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import socket from "@/lib/socket";
 import { formatCurrency, getVietnameseOrderStatus } from "@/lib/utils";
-import { useGetGuestOrderListQuery } from "@/queries/useGuest";
+import { useGuestGetOrderListQuery } from "@/queries/useGuest";
 import { UpdateOrderResType } from "@/schemaValidations/order.schema";
 import Image from "next/image";
 import { useEffect, useMemo } from "react";
 
 export default function OrderCart() {
-  const { data, refetch } = useGetGuestOrderListQuery();
+  const { data, refetch } = useGuestGetOrderListQuery();
   const orders = useMemo(() => data?.payload.data ?? [], [data]);
   const totalPrice = useMemo(() => {
     return orders.reduce((result, order) => {
@@ -51,7 +51,7 @@ export default function OrderCart() {
       socket.off("disconnect", onDisconnect);
       socket.off("update-order", onUpdateOrder);
     };
-  }, []);
+  }, [refetch]);
 
   return (
     <>
