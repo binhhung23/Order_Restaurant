@@ -333,7 +333,13 @@ export default function DishTable() {
             <AutoPagination
               page={table.getState().pagination.pageIndex + 1}
               pageSize={table.getPageCount()}
-              pathname="/manage/dishes"
+              onClick={(pageNumber) =>
+                table.setPagination({
+                  pageIndex: pageNumber - 1,
+                  pageSize: PAGE_SIZE,
+                })
+              }
+              isLink={false}
             />
           </div>
         </div>
